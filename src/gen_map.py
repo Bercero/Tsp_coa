@@ -1,17 +1,58 @@
 #! /usr/bin/env python3.5
 from random import random
-from sys import argv
-try:
-    nc=int(argv[1])
-    mapa=[0]
-    for i in range(nc):
-        random()
-except:
-    #TODO mejorar esta linea
-    print('''USO:
-    '''+argv[0]+''' num_ciudades agujeros simetrico
-    ejemplo '''+argv[0]+''' 5 1 1
-        crea un mapa de 5 ciudades no todas ellas directamente conectadas y con caminos simetricos''')
+from math import hypot
+from pickle import dump, load
+from os import walk
+class mapa:
+    escala=1000 #ancho y largo del mapa en kilometros
+    def __init__(self,nc):
+        #se construye una lista de nc ciudades con dos cordenadas aleatorias
+        self.cords=[{'x':None,'y':None} for i in range(nc)]
+        for i in range(nc):
+            self.cords[i]['x']=int(random()*self.escala)
+            self.cords[i]['y']=int(random()*self.escala)
+            
+        dist=[[0]*nc for i in range(nc)]
+
+        for i in range(nc):
+            for j in range(i+1,nc):
+                x=self.cords[i]['x']-self.cords[j]['x']
+                y=self.cords[i]['y']-self.cords[j]['y']
+                dist[i][j]=hypot(x,y)
+                dist[j][i]=dist[i][j]     
+        self.guardar()
+    def guardar(self):
+        #TODO pasar variable de entorno para encontrar la carpeta mapas
+        #TODO guardar como mapas/n_ciudades/simetrico_agujeros_1.mp
+        prefix='mapas/'
+        fichero=prefix+'mapa.mp'
+
+        ficheros = []
+        for (path, dirs, files) in walk(prefix):
+             ficheros.extend(files)
+             break
+        print(ficheros)
+        with open(fichero,'wb') as f:
+             dump(self,f)
+    def pib(self):
+        for i in self.cords:
+            print(i)
+        for i in self.dist:
+            print(i)     
+if __name__ == '__main__':
+    from sys import argv
+    try:
+        #el primer argumento es el numero de ciudades
+        nc=int(argv[1])
+        m=mapa(nc)
+        #m.pib()
+    except:
+        #TODO mejorar esta linea y devolver error
+        print('''USO:
+        '''+argv[0]+''' num_ciudades agujeros simetrico
+        ejemplo '''+argv[0]+''' 5 1 1
+            crea un mapa de 5 ciudades no todas ellas directamente conectadas y con caminos simetricos''')
+    
 #lee parametros
 #   tamaño , con o sin agujeros, simetrico o no
 #generar nube de puntos (ciudades) en 2D
