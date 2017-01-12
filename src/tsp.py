@@ -1,11 +1,13 @@
 #! /usr/bin/env python3.5
 #TODO arreglar el tema del paquete (__init__.py)
-from gen_map import mapa
+from gen_map import Mapa
 from pickle import load
 class tsp_coa:
     
     def __init__(self,mapa):
         self.mapa=mapa
+        nc=mapa.get_num_ciudades()
+        self.m_feromonas=[[0 for x in range(nc)]for i in range(nc)]
         
     def ejecutar(self, max_it, nh, algoritmo,np):
         for it in range(max_it):
@@ -17,7 +19,15 @@ class tsp_coa:
             if self.convergencia():
                 break
     def soltar_hormiga(self):
-        return [1]
+        #se parte siempre de la primera ciudad
+        camino=[0]
+        min=0
+        nc=self.mapa.get_num_ciudades()
+        #for i in range(nc):
+             
+        self.mapa.pib()
+        
+            
     def actualizar_feromonas(self,a):
         print(a)
     def evaporar_feromonas(self,a):

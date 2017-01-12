@@ -3,7 +3,7 @@ from random import random
 from math import hypot
 from pickle import dump
 from os import walk
-class mapa:
+class Mapa:
     def __init__(self,nc):
         self.escala=1000 #ancho y largo del mapa en kilometros
         self.agujeros=False #TODO
@@ -43,14 +43,16 @@ class mapa:
     def pib(self):
         for i in self.cords:
             print(i)
-        for i in self.dist:
-            print(i)     
+        #for i in self.dist:            print(i)     
+    
+    def get_num_ciudades(self):
+        return len(self.cords)
 if __name__ == '__main__':
     from sys import argv
 #try:
     #el primer argumento es el numero de ciudades
     nc=int(argv[1])
-    m=mapa(nc)
+    m=Mapa(nc)
     m.pib()
     
 #except:
