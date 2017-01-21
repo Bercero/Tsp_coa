@@ -1,3 +1,4 @@
 mapas/*
 src/*.pyc
 src/__pycache__/
+.idea/
