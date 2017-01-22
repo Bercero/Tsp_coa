@@ -1,8 +1,8 @@
 #! /usr/bin/env python3.5
 from gen_map import Mapa
+from config import get_args, init_config
 from pickle import load
 from random import random
-
 
 class tsp_as:
     def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, np, alfa, beta, p_evap, fac_elitismo=1):
@@ -16,7 +16,7 @@ class tsp_as:
         self.p_evap = p_evap
         self.m_feromonas = [[1 for x in range(self.nc)] for i in range(self.nc)]
         self.fac_elitismo = fac_elitismo
-        if algoritmo == 1:
+        if algoritmo == 'AS_ELITISTA':
             self.actualizar_feromonas = self.actualizar_feromonas_elitista
 
         self.mejor_ruta=None
@@ -121,32 +121,31 @@ class tsp_as:
 
 
 if __name__ == '__main__':
-    # TODO
-    fichero = "mapas/mapa.mp"
-    max_it = 80
-    max_it_sc=80
-    nh = 5
-    algoritmo = 1
-    np = 1
-    alfa = 1
-    beta = 1
-    p_evap = 0.25
-    factor_elitismo = 1
-    with open(fichero, 'rb') as f:
+    try :
+        args=get_args()
+    except:
+        init_config()
+        print('se ha generado un archivo de configuración de ejemplo')
+        exit()
+    with open(args['mapa'], 'rb') as f:
         mapa = load(f)
+        max_it=int(args['max_it'])
+        max_it_sc=int(args['max_it_sc'])
+        nh=int(args['nh'])
+        algoritmo=args['algoritmo']
+        np=int(args['np'])
+        alfa=float(args['alfa'])
+        beta=float(args['beta'])
+        p_evap=float(args['p_evap'])
+        factor_elitismo=float(args['factor_elitismo'])
     t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, np, alfa, beta, p_evap, factor_elitismo)
     t.ejecutar()
 
-# main
-#   leer parametros de configuracion
+#
 #       mapa(de cualquier tipo) mismo tratamiento?????
-#       numero de hormigas
-#       tipo de algoritmo
 #    bucle mientras no fin
 #       lanzar hormigas paralelas
 #       esperar hormigas
-#       actualizar fermonas segun algoritmo 
-#       fin si max iterciones o convergencia
-#        otras condiciones posibles serian el tiempo de proceso y acercarse a una solucion optima conocida, pero no los voy a aplicar
+#       actualizar fermonas segun algoritmo
 #    escribir resultados en pantalla y en fichero
 # paralelismo
