@@ -1,3 +1,4 @@
+*.dat
 config
 mapas/*
 src/*.pyc

@@ -1,5 +1,5 @@
 #! /usr/bin/env python3.5
-from random import random
+from random import random, randint
 from math import hypot
 from pickle import dump
 from os import walk
@@ -7,6 +7,7 @@ from os import walk
 
 class Mapa:
     def __init__(self, nc):
+        self.id=str(nc)+'-'+str(randint(0,1000))
         self.escala = 1000  # ancho y largo del mapa en kilometros
         self.agujeros = False  # TODO
         self.simetrico = True  # TODO
@@ -68,6 +69,13 @@ class Mapa:
     def get_num_ciudades(self):
         return len(self.cords)
 
+    def get_agujeros(self):
+        return self.agujeros
+
+    def get_simetrico(self):
+        return self.simetrico
+    def get_id(self):
+        return self.id
 
 if __name__ == '__main__':
     from sys import argv
