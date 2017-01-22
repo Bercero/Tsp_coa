@@ -5,24 +5,37 @@ from random import random
 
 
 class tsp_as:
-    def __init__(self, mapa):
+    def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, np, alfa, beta, p_evap, fac_elitismo=1):
         self.mapa = mapa
         self.nc = mapa.get_num_ciudades()
+        self.max_it = max_it
+        self.max_it_sc = max_it_sc
+        self.nh = nh
+        self.alfa = alfa
+        self.beta = beta
+        self.p_evap = p_evap
         self.m_feromonas = [[1 for x in range(self.nc)] for i in range(self.nc)]
+        self.fac_elitismo = fac_elitismo
+        if algoritmo == 1:
+            self.actualizar_feromonas = self.actualizar_feromonas_elitista
 
-    def ejecutar(self, max_it, nh, algoritmo, np, alfa, beta):
-        self.alfa=alfa
-        self.beta=beta
+        self.mejor_ruta=None
+
+        self.np = np  # TODO
+
+    def ejecutar(self):
         self.actualizar_g()
-        for it in range(max_it):
+        # self.mejor_ruta=None
+        for it in range(self.max_it):
             rutas = []
-            for h in range(nh):
-                rutas.append(self.soltar_hormiga())
+            for h in range(self.nh):
+                rutas.append(self.lanzar_hormiga())
             self.actualizar_feromonas(rutas)
+
             if self.convergencia():
                 break
 
-    def soltar_hormiga(self):
+    def lanzar_hormiga(self):
         # se parte siempre de la primera ciudad
         ruta = [0]
         for i in range(1, self.nc):
@@ -38,23 +51,44 @@ class tsp_as:
             ruta.append(elegida)
         return ruta
 
-    def actualizar_feromonas(self, rutas):
+    def actualizar_feromonas_elitista(self, rutas):
         self.evaporar_feromonas()
+        max_calidad = 0
+        mejor_ruta = None
+        for r in rutas:
+            calidad = self.get_calidad(r)
+            if calidad > max_calidad:
+                max_calidad = calidad
+                mejor_ruta = r
+            for i in range(self.nc):
+                self.m_feromonas[r[i]][r[(i + 1) % self.nc]] += calidad
+        for i in range(self.nc):
+            self.m_feromonas[mejor_ruta[i]][mejor_ruta[(i + 1) % self.nc]] += self.fac_elitismo * max_calidad
 
+        mejor_dist=0
+        for i in range(self.nc):
+            mejor_dist += self.mapa.get_dist(mejor_ruta[i], mejor_ruta[(i + 1) % self.nc])
 
-
-        self.actualizar_g()
+        if not self.mejor_ruta :
+            self.mejor_ruta=mejor_ruta
+            self.mejor_dist=mejor_dist
+            self.it_sc=0
+        elif mejor_dist < self.mejor_dist :
+            self.mejor_dist=mejor_dist
+            self.mejor_ruta = mejor_ruta
+            self.it_sc=0
 
     def evaporar_feromonas(self):
-        for origen in self.m_feromonas:
-            for destino in range(len(origen)):
-                origen[destino] -= 1
-                if origen[destino] < 1:
-                    origen[destino]=1
+        for i in range(self.nc):
+            for j in range(self.nc):
+                if i != j:
+                    self.m_feromonas[i][j] *= (1 - self.p_evap)
+                    if self.m_feromonas[i][j] < 1:
+                        self.m_feromonas[i][j] = 1
 
     def convergencia(self):
-
-        return False
+        self.it_sc+=1
+        return self.it_sc >= self.max_it_sc
 
     def get_probobabilidades(self, ruta):
         i = ruta[-1]
@@ -71,27 +105,37 @@ class tsp_as:
         return probabilidades
 
     def actualizar_g(self):
-        self.g=[[None]*self.nc for i in range(self.nc)]
+        self.g = [[None] * self.nc for i in range(self.nc)]
         for i in range(self.nc):
             for j in range(self.nc):
                 if i != j:
-                    f_ij = self.m_feromonas[i][j]*self.alfa
-                    h_ij = self.mapa.get_distancia(i, j)*self.beta
-                    self.g[i][j] = f_ij/h_ij
+                    f_ij = self.m_feromonas[i][j] * self.alfa
+                    h_ij = self.beta / self.mapa.get_dist_norm(i, j)
+                    self.g[i][j] = f_ij * h_ij
+
+    def get_calidad(self, ruta):
+        s = 0
+        for i in range(self.nc):
+            s += self.mapa.get_dist_norm(i, (i + 1) % self.nc)
+        return 1 / s
+
 
 if __name__ == '__main__':
     # TODO
     fichero = "mapas/mapa.mp"
-    max_it = 1
+    max_it = 80
+    max_it_sc=80
     nh = 5
-    algoritmo = 0
+    algoritmo = 1
     np = 1
-    alfa=1
-    beta=1
+    alfa = 1
+    beta = 1
+    p_evap = 0.25
+    factor_elitismo = 1
     with open(fichero, 'rb') as f:
         mapa = load(f)
-    t = tsp_as(mapa)
-    t.ejecutar(max_it, nh, algoritmo, np, alfa, beta)
+    t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, np, alfa, beta, p_evap, factor_elitismo)
+    t.ejecutar()
 
 # main
 #   leer parametros de configuracion

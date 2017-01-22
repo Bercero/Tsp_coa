@@ -20,12 +20,20 @@ class Mapa:
         # calculo de la matriz de distacias
         # TODO solo el tipo simple
         self.m_dist = [[0] * nc for i in range(nc)]
+        max_dist=0
         for i in range(nc):
             for j in range(i + 1, nc):
                 x = self.cords[i]['x'] - self.cords[j]['x']
                 y = self.cords[i]['y'] - self.cords[j]['y']
-                self.m_dist[i][j] = hypot(x, y)
-                self.m_dist[j][i] = self.m_dist[i][j]
+                distancia=hypot(x, y)
+                self.m_dist[i][j] = distancia
+                self.m_dist[j][i] = distancia
+                if distancia > max_dist:
+                    max_dist=distancia
+        self.m_dist_norm = [[0] * nc for i in range(nc)]
+        for i in range(nc):
+            for j in range(nc):
+                self.m_dist_norm[i][j]=self.m_dist[i][j]/max_dist
         # almacenamiento del objeto en un archivo para su uso posterior
         self.guardar()
 
@@ -43,13 +51,18 @@ class Mapa:
         with open(fichero, 'wb') as f:
             dump(self, f)
 
-    def get_distancia(self, a, b):
+    def get_dist(self, a, b):
         return self.m_dist[a][b]
+
+    def get_dist_norm(self, a, b):
+        return self.m_dist_norm[a][b]
     # TODO cambiar nombre por __print__ o algo asi
     def pib(self):
         for i in self.cords:
             print(i)
         for i in self.m_dist:
+            print(i)
+        for i in self.m_dist_norm:
             print(i)
 
     def get_num_ciudades(self):
