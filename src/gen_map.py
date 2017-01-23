@@ -80,25 +80,16 @@ class Mapa:
 if __name__ == '__main__':
     from sys import argv
 
-    # try:
+    try:
     # el primer argumento es el numero de ciudades
-    nc = int(argv[1])
-    m = Mapa(nc)
-    m.pib()
+        nc = int(argv[1])
+        m = Mapa(nc)
+        m.pib()
 
-    # except:
-    # TODO mejorar esta linea y devolver error
-    print('''USO:
-    ''' + argv[0] + ''' num_ciudades agujeros simetrico
-    ejemplo ''' + argv[0] + ''' 5 1 1
+    except:
+        # TODO mejorar esta linea y devolver error
+        print('''USO:
+        ''' + argv[0] + ''' num_ciudades agujeros simetrico
+        ejemplo ''' + argv[0] + ''' 5 1 1
         crea un mapa de 5 ciudades no todas ellas directamente conectadas y con caminos simetricos''')
 
-# TODO hacer posible tambien leer matriz de distancias para construir un mapa
-# lee parametros
-#   tamaño , con o sin agujeros, simetrico o no
-# unir ciudades
-#    o todas con todas
-#        simetricamente o asimetricamente(la distancia real * factor aleatorio pequeño
-#  o conectar con las mas cercana (un cierto radio) (comprobar despues la conexion total del grafo)
-# guardar en fichero con nombre indicando tamaño y tipo + num secuencia
-# getters: distancia entre dos ciudades, numero de ciudades

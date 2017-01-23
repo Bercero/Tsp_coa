@@ -5,7 +5,7 @@ from pickle import load
 from random import random
 
 class tsp_as:
-    def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, np, alfa, beta, p_evap, fac_elitismo=1):
+    def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, fac_elitismo=1,r=0,w=0):
         self.mapa = mapa
         self.nc = mapa.get_num_ciudades()
         self.max_it = max_it
@@ -15,15 +15,20 @@ class tsp_as:
         self.beta = beta
         self.p_evap = p_evap
         self.m_feromonas = [[1 for x in range(self.nc)] for i in range(self.nc)]
-        self.fac_elitismo = fac_elitismo
         if algoritmo == 'AS':
             self.actualizar_feromonas = self.actualizar_feromonas_as
         elif algoritmo == 'AS_ELITISTA':
+            self.fac_elitismo = fac_elitismo
             self.actualizar_feromonas = self.actualizar_feromonas_as_elitista
-
+        elif algoritmo== 'AS_RANK_BASED':
+            self.actualizar_feromonas= self.actualizar_feromonas_as_ranked
+            self.convergencia=self.convergencia_ranking
+            self.r=r
+            self.w=w
+            self.ranking=[]
+            self.covergencia=self.convergencia_ranking
         self.mejor_ruta=None
         self.init_result(algoritmo)
-        self.np = np  # TODO
 
     def ejecutar(self):
         self.actualizar_g()
@@ -32,6 +37,7 @@ class tsp_as:
             rutas = []
             for h in range(self.nh):
                 rutas.append(self.lanzar_hormiga())
+            #rutas.append(self.lanzar_hormigaloca())
             self.actualizar_feromonas(rutas)
 
             if self.convergencia():
@@ -58,7 +64,6 @@ class tsp_as:
     def actualizar_feromonas_as(self, rutas):
         self.evaporar_feromonas()
         max_calidad = 0
-        mejor_ruta = None
         for r in rutas:
             calidad = self.get_calidad(r)
             if calidad > max_calidad:
@@ -72,7 +77,6 @@ class tsp_as:
     def actualizar_feromonas_as_elitista(self, rutas):
         self.evaporar_feromonas()
         max_calidad = 0
-        mejor_ruta = None
         for r in rutas:
             calidad = self.get_calidad(r)
             if calidad > max_calidad:
@@ -84,6 +88,24 @@ class tsp_as:
             self.m_feromonas[mejor_ruta[i]][mejor_ruta[(i + 1) % self.nc]] += self.fac_elitismo * max_calidad
         self.actualizar_mejor_ruta(mejor_ruta)
         self.actualizar_g()
+
+    def actualizar_feromonas_as_ranked(self, rutas):
+        self.evaporar_feromonas()
+        rutas.extend(self.ranking)
+        rutas=sorted(rutas, key=self.get_calidad, reverse=True)
+        rutas=self.ranking=rutas[:self.r]
+
+        for j in range(self.r):
+            ru=rutas[j]
+            calidad = self.get_calidad(ru)
+            for i in range(self.nc):
+                self.m_feromonas[ru[i]][ru[(i + 1) % self.nc]] +=(self.w-j)*calidad
+        ru=rutas[0]
+        self.mejor_dist=0
+        for i in range(self.nc):
+            self.mejor_dist+=self.mapa.get_dist(ru[i],ru[(i + 1) % self.nc])
+        self.actualizar_g()
+
     def actualizar_mejor_ruta(self, ruta):
         mejor_dist = 0
         for i in range(self.nc):
@@ -109,6 +131,14 @@ class tsp_as:
     def convergencia(self):
         self.it_sc+=1
         return self.it_sc >= self.max_it_sc
+
+    def convergencia_ranking(self):
+        rutas_distintas=[]
+        for r in self.ranking:
+            if r not in rutas_distintas:
+                rutas_distintas.append(r)
+        n=len(rutas_distintas)/self.r
+        return n > 0.05
 
     def get_probobabilidades(self, ruta):
         i = ruta[-1]
@@ -159,11 +189,11 @@ class tsp_as:
             self.resultados['factor_elitismo']=self.fac_elitismo
 
     def guardar_result(self):
-        with open('resultados.dat', 'w') as f:
-            keys=self.resultados.keys()
-            for k in keys:
+        with open('resultados.dat', 'a') as f:
+            keys=sorted(self.resultados.keys())
+            for k in keys[:-1]:
                 f.write(k+'='+str(self.resultados[k])+',')
-
+            f.write(keys[-1] + '=' + str(self.resultados[keys[-1]]) + '\n')
 
 
 
@@ -180,12 +210,13 @@ if __name__ == '__main__':
         max_it_sc=int(args['max_it_sc'])
         nh=int(args['nh'])
         algoritmo=args['algoritmo']
-        np=int(args['np'])
         alfa=float(args['alfa'])
         beta=float(args['beta'])
         p_evap=float(args['p_evap'])
         factor_elitismo=float(args['factor_elitismo'])
-    t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, np, alfa, beta, p_evap, factor_elitismo)
+        r=int(args['r'])
+        w=int(args['w'])
+    t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, factor_elitismo,r,w)
     t.ejecutar()
 
 #
