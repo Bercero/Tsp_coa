@@ -166,7 +166,7 @@ class tsp_as:
     def get_calidad(self, ruta):
         s = 0
         for i in range(self.nc):
-            s += self.mapa.get_dist_norm(i, (i + 1) % self.nc)
+            s += self.mapa.get_dist_norm(ruta[i], ruta[(i + 1) % self.nc])
         return 1 / s
 
     def init_result(self,algoritmo):
