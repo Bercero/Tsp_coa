@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>659</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>TSP ACO</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="frame">
@@ -30,18 +30,92 @@
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="loadButton">
+   <widget class="QPushButton" name="newMapaButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>40</y>
+      <x>690</x>
+      <y>20</y>
       <width>85</width>
       <height>30</height>
      </rect>
     </property>
     <property name="text">
-     <string>Cargar</string>
+     <string>Nuevo mapa</string>
     </property>
+   </widget>
+   <widget class="QSplitter" name="selectorAlgoritmo">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>60</y>
+      <width>81</width>
+      <height>42</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+    <widget class="QLabel" name="labelAlgoritmo">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Algoritmo&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBoxAlgoritmo"/>
+   </widget>
+   <widget class="QPushButton" name="ejecutarButton">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>360</y>
+      <width>85</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ejecutar</string>
+    </property>
+   </widget>
+   <widget class="QTabWidget" name="informacionWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>430</y>
+      <width>761</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="infoTab">
+     <attribute name="title">
+      <string>información</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="ejecutionTab">
+     <attribute name="title">
+      <string>ejecución</string>
+     </attribute>
+    </widget>
+   </widget>
+   <widget class="QSplitter" name="selectorMapa">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>10</y>
+      <width>81</width>
+      <height>42</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+    <widget class="QLabel" name="labelMapa">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Mapa&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBoxMapa"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -32,7 +32,6 @@ class tsp_as:
 
     def ejecutar(self):
         self.actualizar_g()
-        # self.mejor_ruta=None
         for it in range(self.max_it):
             rutas = []
             for h in range(self.nh):
