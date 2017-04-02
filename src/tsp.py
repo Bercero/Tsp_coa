@@ -1,5 +1,5 @@
 #! /usr/bin/env python3.5
-from gen_map import Mapa
+from mapas import Mapa
 from config import get_args, init_config
 from pickle import load
 from random import random
@@ -205,16 +205,16 @@ if __name__ == '__main__':
         exit()
     with open(args['mapa'], 'rb') as f:
         mapa = load(f)
-        max_it=int(args['max_it'])
-        max_it_sc=int(args['max_it_sc'])
-        nh=int(args['nh'])
-        algoritmo=args['algoritmo']
-        alfa=float(args['alfa'])
-        beta=float(args['beta'])
-        p_evap=float(args['p_evap'])
-        factor_elitismo=float(args['factor_elitismo'])
-        r=int(args['r'])
-        w=int(args['w'])
+    max_it=int(args['max_it'])
+    max_it_sc=int(args['max_it_sc'])
+    nh=int(args['nh'])
+    algoritmo=args['algoritmo']
+    alfa=float(args['alfa'])
+    beta=float(args['beta'])
+    p_evap=float(args['p_evap'])
+    factor_elitismo=float(args['factor_elitismo'])
+    r=int(args['r'])
+    w=int(args['w'])
     t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, factor_elitismo,r,w)
     t.ejecutar()
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>802</width>
     <height>659</height>
    </rect>
   </property>
@@ -33,9 +33,9 @@
    <widget class="QPushButton" name="newMapaButton">
     <property name="geometry">
      <rect>
-      <x>690</x>
+      <x>680</x>
       <y>20</y>
-      <width>85</width>
+      <width>101</width>
       <height>30</height>
      </rect>
     </property>
@@ -43,7 +43,7 @@
      <string>Nuevo mapa</string>
     </property>
    </widget>
-   <widget class="QSplitter" name="selectorAlgoritmo">
+   <widget class="QSplitter" name="algoritmoSelector">
     <property name="geometry">
      <rect>
       <x>580</x>
@@ -55,12 +55,12 @@
     <property name="orientation">
      <enum>Qt::Vertical</enum>
     </property>
-    <widget class="QLabel" name="labelAlgoritmo">
+    <widget class="QLabel" name="algoritmoLabel">
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Algoritmo&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBoxAlgoritmo"/>
+    <widget class="QComboBox" name="algoritmoComboBox"/>
    </widget>
    <widget class="QPushButton" name="ejecutarButton">
     <property name="geometry">
@@ -98,7 +98,7 @@
      </attribute>
     </widget>
    </widget>
-   <widget class="QSplitter" name="selectorMapa">
+   <widget class="QSplitter" name="mapaSelector">
     <property name="geometry">
      <rect>
       <x>580</x>
@@ -110,12 +110,25 @@
     <property name="orientation">
      <enum>Qt::Vertical</enum>
     </property>
-    <widget class="QLabel" name="labelMapa">
+    <widget class="QLabel" name="mapaLabel">
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Mapa&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBoxMapa"/>
+    <widget class="QComboBox" name="mapaComboBox"/>
+   </widget>
+   <widget class="QPushButton" name="cargarMapaButton">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>60</y>
+      <width>101</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cargar mapa</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -123,8 +136,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>26</height>
+     <width>802</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

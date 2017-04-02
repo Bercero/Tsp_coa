@@ -3,7 +3,7 @@ fichero='config'
 def init_config():
     with open(fichero, 'w') as f:
         f.write("""#ejemplo de configuracion
-#requiere que se haya creado antes con el comando gen_map.py (el unico parametro es el numero de ciudades)
+#requiere que se haya creado antes con el comando mapas.py (el unico parametro es el numero de ciudades)
 mapa=mapas/mapa.mp
 max_it=1000
 #maximo numero de iteraciones sin mejorar la solucion
