@@ -2,7 +2,7 @@
 from random import random, randint
 from math import hypot
 from pickle import dump
-from os import makedirs
+from os import makedirs, listdir
 
 class Mapa:
     def __init__(self, nc):
@@ -37,10 +37,13 @@ class Mapa:
         self.guardar()
 
     def guardar(self):
+        # todo pasar directory por parametros
         directory = 'mapas/'+str(self.get_num_ciudades())
-        self.id=str(000)
-        name = directory + '/mapa'+self.id+'.mp'
         makedirs(directory, mode=0o775, exist_ok=True)
+        self.id=str(self.get_num_ciudades())+'_'
+        self.id+=str(len(listdir(directory)))
+
+        name = directory + '/mapa'+self.id+'.mp'
         with open(name, 'wb') as f:
             dump(self, f)
 
