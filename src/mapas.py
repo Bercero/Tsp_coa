@@ -2,24 +2,22 @@
 from random import random, randint
 from math import hypot
 from pickle import dump
-from os import walk
-
+from os import makedirs
 
 class Mapa:
     def __init__(self, nc):
-        self.id=str(nc)+'-'+str(randint(0,1000))
         self.escala = 1000  # ancho y largo del mapa en kilometros
         self.agujeros = False  # TODO
         self.simetrico = True  # TODO
-
+        self.id = 7
         # lista de nc ciudades con cordenadas aleatorias
-        self.cords = [{'x': None, 'y': None} for i in range(nc)]
+        self.cords = [{} for i in range(nc)]
         for i in range(nc):
             self.cords[i]['x'] = int(random() * self.escala)
             self.cords[i]['y'] = int(random() * self.escala)
 
         # calculo de la matriz de distacias
-        # TODO solo el tipo simple
+        # TODO solo funciona si no hay agujeros
         self.m_dist = [[0] * nc for i in range(nc)]
         max_dist=0
         for i in range(nc):
@@ -39,17 +37,11 @@ class Mapa:
         self.guardar()
 
     def guardar(self):
-        # TODO pasar variable de entorno para encontrar la carpeta mapas
-        # TODO guardar como mapas/n_ciudades/simetrico_agujeros_1.mp
-        prefix = 'mapas/'
-        fichero = prefix + 'mapa.mp'
-
-        ficheros = []
-        for (path, dirs, files) in walk(prefix):
-            ficheros.extend(files)
-            break
-        print(ficheros)
-        with open(fichero, 'wb') as f:
+        directory = 'mapas/'+str(self.get_num_ciudades())
+        self.id=str(000)
+        name = directory + '/mapa'+self.id+'.mp'
+        makedirs(directory, mode=0o775, exist_ok=True)
+        with open(name, 'wb') as f:
             dump(self, f)
 
     def get_dist(self, a, b):
@@ -57,7 +49,7 @@ class Mapa:
 
     def get_dist_norm(self, a, b):
         return self.m_dist_norm[a][b]
-    # TODO cambiar nombre por __print__ o algo asi
+    # TODO esta funcion es solo para debug, borrar
     def pib(self):
         for i in self.cords:
             print(i)
@@ -75,21 +67,22 @@ class Mapa:
     def get_simetrico(self):
         return self.simetrico
     def get_id(self):
+        self.id=999#TODO asdinasdnaSNdnaisdnadns
         return self.id
 
 if __name__ == '__main__':
     from sys import argv
 
-    try:
+    #try:
     # el primer argumento es el numero de ciudades
-        nc = int(argv[1])
-        m = Mapa(nc)
-        m.pib()
+    nc = int(argv[1])
+    m = Mapa(nc)
+#     todo print mapa generado chachimente
 
-    except:
-        # TODO mejorar esta linea y devolver error
-        print('''USO:
-        ''' + argv[0] + ''' num_ciudades agujeros simetrico
-        ejemplo ''' + argv[0] + ''' 5 1 1
-        crea un mapa de 5 ciudades no todas ellas directamente conectadas y con caminos simetricos''')
+#except:
+    # TODO mejorar esta linea y devolver error
+    # print('''USO:
+    # ''' + argv[0] + ''' num_ciudades agujeros simetrico fichero
+    # ejemplo ''' + argv[0] + ''' 5 1 1
+    # crea un mapa de 5 ciudades no todas ellas directamente conectadas y con caminos simetricos''')
 

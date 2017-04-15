@@ -36,7 +36,7 @@ class tsp_as:
             rutas = []
             for h in range(self.nh):
                 rutas.append(self.lanzar_hormiga())
-            #rutas.append(self.lanzar_hormigaloca())
+            #rutas.append(self.lanzar_hormigaloca()) todo
             self.actualizar_feromonas(rutas)
 
             if self.convergencia():
@@ -91,6 +91,7 @@ class tsp_as:
     def actualizar_feromonas_as_ranked(self, rutas):
         self.evaporar_feromonas()
         rutas.extend(self.ranking)
+        #todo probar la ordenacion
         rutas=sorted(rutas, key=self.get_calidad, reverse=True)
         rutas=self.ranking=rutas[:self.r]
 
@@ -136,7 +137,7 @@ class tsp_as:
         for r in self.ranking:
             if r not in rutas_distintas:
                 rutas_distintas.append(r)
-        n=len(rutas_distintas)/self.r
+        n=len(rutas_distintas)/self.r #TODO r o w?
         return n > 0.05
 
     def get_probobabilidades(self, ruta):
@@ -170,14 +171,10 @@ class tsp_as:
 
     def init_result(self,algoritmo):
         self.resultados={'id':self.mapa.get_id()}
-        if self.mapa.get_agujeros():
-            self.resultados['agujeros']=True
-        else :
-            self.resultados['agujeros']=False
-        if self.mapa.get_simetrico():
-            self.resultados['simetrico']=True
-        else :
-            self.resultados['simetrico']=False
+
+        self.resultados['agujeros'] = self.mapa.get_agujeros()
+        self.resultados['simetrico'] = self.mapa.get_simetrico()
+
         self.resultados['nc']=self.nc
         self.resultados['nh']=self.nh
         self.resultados['alfa']=self.alfa
@@ -186,6 +183,9 @@ class tsp_as:
         self.resultados['algoritmo']=algoritmo
         if algoritmo == 'AS_ELITISTA':
             self.resultados['factor_elitismo']=self.fac_elitismo
+        elif algoritmo=='AS_RANK_BASED':
+            self.resultados['r'] = self.r
+            self.resultados['w'] = self.w
 
     def guardar_result(self):
         with open('resultados.dat', 'a') as f:
@@ -217,12 +217,3 @@ if __name__ == '__main__':
     w=int(args['w'])
     t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, factor_elitismo,r,w)
     t.ejecutar()
-
-#
-#       mapa(de cualquier tipo) mismo tratamiento?????
-#    bucle mientras no fin
-#       lanzar hormigas paralelas
-#       esperar hormigas
-#       actualizar fermonas segun algoritmo
-#    escribir resultados en pantalla y en fichero
-# paralelismo

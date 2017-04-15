@@ -1,5 +1,4 @@
 #! /usr/bin/env python3.5
-#todo renombrar tsp_as, queda feo
 from tsp import tsp_as as tsp
 #TODO es necesario hacer el import aqui y en tsp?
 from pickle import load
@@ -9,8 +8,9 @@ from ui_mainwindow import Ui_MainWindow
 
 from os.path import splitext, basename
 
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtGui import QImage
+from PyQt5.QtCore import pyqtSlot, Qt
 
 import sys
 
@@ -27,7 +27,7 @@ class MainWindow(Ui_MainWindow):
     @pyqtSlot(bool)
     def addMapa(self, a):
         directory = "./mapas"
-        mapas=QtWidgets.QFileDialog.getOpenFileNames(self.centralwidget,"cargarMapa",directory)[0]
+        mapas=QFileDialog.getOpenFileNames(self.centralwidget,"cargarMapa",directory)[0]
         for m in mapas:
             self.mapasList.append(m)
             self.mapaComboBox.addItem(splitext(basename(m))[0])
@@ -39,8 +39,8 @@ class MainWindow(Ui_MainWindow):
             #TODO print info en infoTab
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
-    w = QtWidgets.QMainWindow()
+    app = QApplication([])
+    w = QMainWindow()
     u = MainWindow()
     u.setupUi(w)
 
