@@ -1,18 +1,19 @@
 #! /usr/bin/env python3.5
+# todo fichero esta hardcodeado
 fichero='config'
+import tsp
 def init_config():
+    algoritmo=tsp.AS_ELITISTA
     with open(fichero, 'w') as f:
         f.write("""#ejemplo de configuracion
 #requiere que se haya creado antes con el comando mapas.py (el unico parametro es el numero de ciudades)
-mapa=mapas/10/mapa000.mp
+mapa=mapas/10/mapa10_0.mp
 max_it=1000
 #maximo numero de iteraciones sin mejorar la solucion
 max_it_sc=25
 nh=50
 #elegir entre uno de estos algoritmos
-#algoritmo=AS
-algoritmo=AS_ELITISTA
-#algoritmo=AS_RANK_BASED
+algoritmo="""+algoritmo+"""
 #el peso de las feromonas aumenta con alfa
 #el peso de las distancias mas pequeñas aumenta con beta
 #pueden tomar cualquier valor positivo pero yo uso valores que sumen 1

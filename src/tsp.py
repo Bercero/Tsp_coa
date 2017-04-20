@@ -1,9 +1,11 @@
 #! /usr/bin/env python3.5
 from mapas import Mapa
-from config import get_args, init_config
+from config import *
 from pickle import load
 from random import random
-
+AS='AS'
+AS_ELITISTA='AS_ELITISTA'
+AS_RANK_BASED='AS_RANK_BASED'
 class tsp_as:
     def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, fac_elitismo=1,r=0,w=0):
         self.mapa = mapa
@@ -15,12 +17,12 @@ class tsp_as:
         self.beta = beta
         self.p_evap = p_evap
         self.m_feromonas = [[1 for x in range(self.nc)] for i in range(self.nc)]
-        if algoritmo == 'AS':
+        if algoritmo == AS:
             self.actualizar_feromonas = self.actualizar_feromonas_as
-        elif algoritmo == 'AS_ELITISTA':
+        elif algoritmo == AS_ELITISTA:
             self.fac_elitismo = fac_elitismo
             self.actualizar_feromonas = self.actualizar_feromonas_as_elitista
-        elif algoritmo== 'AS_RANK_BASED':
+        elif algoritmo== AS_RANK_BASED:
             self.actualizar_feromonas= self.actualizar_feromonas_as_ranked
             self.convergencia=self.convergencia_ranking
             self.r=r
@@ -137,7 +139,7 @@ class tsp_as:
         for r in self.ranking:
             if r not in rutas_distintas:
                 rutas_distintas.append(r)
-        n=len(rutas_distintas)/self.r #TODO r o w?
+        n=len(rutas_distintas)/self.r
         return n > 0.05
 
     def get_probobabilidades(self, ruta):
