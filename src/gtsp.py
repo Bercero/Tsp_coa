@@ -1,5 +1,5 @@
 #! /usr/bin/env python3.5
-from tsp import tsp_as as tsp
+from tsp import ALGORITMOS, tsp_as as tsp
 #TODO es necesario hacer el import aqui y en tsp?
 from pickle import load
 from mapas import Mapa
@@ -22,7 +22,8 @@ class MainWindow(Ui_MainWindow):
         #todo conectar la señal ^C
         self.cargarMapaButton.clicked.connect(self.addMapa)
         self.mapaComboBox.currentIndexChanged.connect(self.cargarMapa)
-
+        for al in ALGORITMOS:
+            self.algoritmoComboBox.addItem(al)
     #TODO filters, comprobar extensiones
     @pyqtSlot(bool)
     def addMapa(self, a):

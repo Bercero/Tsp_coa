@@ -1,12 +1,11 @@
 #! /usr/bin/env python3.5
 from mapas import Mapa
+ALGORITMOS=['AS','AS_ELITISTA','AS_RANK_BASED']
 from config import *
 from pickle import load
 from random import random
-AS='AS'
-AS_ELITISTA='AS_ELITISTA'
-AS_RANK_BASED='AS_RANK_BASED'
 class tsp_as:
+
     def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, fac_elitismo=1,r=0,w=0):
         self.mapa = mapa
         self.nc = mapa.get_num_ciudades()
@@ -17,12 +16,12 @@ class tsp_as:
         self.beta = beta
         self.p_evap = p_evap
         self.m_feromonas = [[1 for x in range(self.nc)] for i in range(self.nc)]
-        if algoritmo == AS:
+        if algoritmo == ALGORITMOS[0]:
             self.actualizar_feromonas = self.actualizar_feromonas_as
-        elif algoritmo == AS_ELITISTA:
+        elif algoritmo == ALGORITMOS[1]:
             self.fac_elitismo = fac_elitismo
             self.actualizar_feromonas = self.actualizar_feromonas_as_elitista
-        elif algoritmo== AS_RANK_BASED:
+        elif algoritmo== ALGORITMOS[2]:
             self.actualizar_feromonas= self.actualizar_feromonas_as_ranked
             self.convergencia=self.convergencia_ranking
             self.r=r

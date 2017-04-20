@@ -1,9 +1,12 @@
 #! /usr/bin/env python3.5
 # todo fichero esta hardcodeado
 fichero='config'
-import tsp
+from tsp import ALGORITMOS
 def init_config():
-    algoritmo=tsp.AS_ELITISTA
+    # 0 Ant system
+    # 1 Ant system elitista
+    # 2 Ant system basado en ranking
+    algoritmo=ALGORITMOS[0]
     with open(fichero, 'w') as f:
         f.write("""#ejemplo de configuracion
 #requiere que se haya creado antes con el comando mapas.py (el unico parametro es el numero de ciudades)
