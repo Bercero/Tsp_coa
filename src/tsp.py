@@ -3,15 +3,16 @@ from mapas import Mapa
 ALGORITMOS=['AS','AS_ELITISTA','AS_RANK_BASED']
 from config import *
 from pickle import load
-from random import random
+from random import random, randint
 class tsp_as:
 
-    def __init__(self, mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, fac_elitismo=1,r=0,w=0):
+    def __init__(self, mapa, max_it, max_it_sc, nh, nhl, algoritmo, alfa, beta, p_evap, fac_elitismo=1, r=0, w=0):
         self.mapa = mapa
         self.nc = mapa.get_num_ciudades()
         self.max_it = max_it
         self.max_it_sc = max_it_sc
         self.nh = nh
+        self.nhl = nhl
         self.alfa = alfa
         self.beta = beta
         self.p_evap = p_evap
@@ -21,15 +22,18 @@ class tsp_as:
         elif algoritmo == ALGORITMOS[1]:
             self.fac_elitismo = fac_elitismo
             self.actualizar_feromonas = self.actualizar_feromonas_as_elitista
-        elif algoritmo== ALGORITMOS[2]:
-            self.actualizar_feromonas= self.actualizar_feromonas_as_ranked
-            self.convergencia=self.convergencia_ranking
-            self.r=r
-            self.w=w
-            self.ranking=[]
-            self.covergencia=self.convergencia_ranking
+        elif algoritmo == ALGORITMOS[2]:
+            self.actualizar_feromonas = self.actualizar_feromonas_as_ranked
+            self.convergencia= self.convergencia_ranking
+            self.r_factor = r
+            self.w_factor = w
+            self.ranking = []
+            self.covergencia = self.convergencia_ranking
         self.mejor_ruta=None
         self.init_result(algoritmo)
+        self.mejor_dist = 0
+
+        self.g = None
 
     def ejecutar(self):
         self.actualizar_g()
@@ -37,14 +41,16 @@ class tsp_as:
             rutas = []
             for h in range(self.nh):
                 rutas.append(self.lanzar_hormiga())
-            #rutas.append(self.lanzar_hormigaloca()) todo
+            for h in range(self.nhl):
+                rutas.append(self.lanzar_hormiga_loca())
             self.actualizar_feromonas(rutas)
 
             if self.convergencia():
                 break
-        self.resultados['it']=it
-        self.resultados['distancia']=self.mejor_dist
+        self.resultados['it'] = it
+        self.resultados['distancia'] = self.mejor_dist
         self.guardar_result()
+
     def lanzar_hormiga(self):
         # se parte siempre de la primera ciudad
         ruta = [0]
@@ -59,6 +65,22 @@ class tsp_as:
                     elegida = e['id']
                     break
             ruta.append(elegida)
+        return ruta
+
+    def lanzar_hormiga_loca(self):
+        # se parte siempre de la primera ciudad
+        ruta = [0]
+        candidatas = [x for x in range(1, self.nc)]
+        while len(candidatas) != 0:
+            inaccesibles = []
+            while len(candidatas) != 0:
+                i = randint(0,len(candidatas)-1)
+                if self.mapa.get_dist(ruta[-1], candidatas[i]) > 0:
+                    ruta.append(candidatas.pop(i))
+                    candidatas.extend(inaccesibles)
+                    break
+                else:
+                    inaccesibles.append(candidatas.pop(i))
         return ruta
 
     def actualizar_feromonas_as(self, rutas):
@@ -92,19 +114,18 @@ class tsp_as:
     def actualizar_feromonas_as_ranked(self, rutas):
         self.evaporar_feromonas()
         rutas.extend(self.ranking)
-        #todo probar la ordenacion
-        rutas=sorted(rutas, key=self.get_calidad, reverse=True)
-        rutas=self.ranking=rutas[:self.r]
+        rutas = sorted(rutas, key=self.get_calidad)
+        rutas = self.ranking = rutas[:self.r_factor]
 
-        for j in range(self.r):
-            ru=rutas[j]
-            calidad = self.get_calidad(ru)
+        for j in range(self.r_factor):
+            ru = rutas[j]
             for i in range(self.nc):
-                self.m_feromonas[ru[i]][ru[(i + 1) % self.nc]] +=(self.w-j)*calidad
-        ru=rutas[0]
-        self.mejor_dist=0
+                self.m_feromonas[ru[i]][ru[(i + 1) % self.nc]] += (self.w_factor - j) / self.w_factor
+        ru = rutas[0]
+        self.mejor_dist = 0
         for i in range(self.nc):
-            self.mejor_dist+=self.mapa.get_dist(ru[i],ru[(i + 1) % self.nc])
+            self.mejor_dist += self.mapa.get_dist(ru[i], ru[(i + 1) % self.nc])
+        self.mejor_ruta = ru
         self.actualizar_g()
 
     def actualizar_mejor_ruta(self, ruta):
@@ -170,51 +191,50 @@ class tsp_as:
             s += self.mapa.get_dist_norm(ruta[i], ruta[(i + 1) % self.nc])
         return 1 / s
 
-    def init_result(self,algoritmo):
+    def init_result(self, algoritmo):
         self.resultados={'id':self.mapa.get_id()}
 
         self.resultados['agujeros'] = self.mapa.get_agujeros()
         self.resultados['simetrico'] = self.mapa.get_simetrico()
 
-        self.resultados['nc']=self.nc
-        self.resultados['nh']=self.nh
-        self.resultados['alfa']=self.alfa
-        self.resultados['beta']=self.beta
-        self.resultados['p_evap']=self.p_evap
-        self.resultados['algoritmo']=algoritmo
+        self.resultados['nc'] = self.nc
+        self.resultados['nh'] = self.nh
+        self.resultados['alfa'] = self.alfa
+        self.resultados['beta'] = self.beta
+        self.resultados['p_evap'] = self.p_evap
+        self.resultados['algoritmo'] = algoritmo
         if algoritmo == 'AS_ELITISTA':
-            self.resultados['factor_elitismo']=self.fac_elitismo
-        elif algoritmo=='AS_RANK_BASED':
+            self.resultados['factor_elitismo'] = self.fac_elitismo
+        elif algoritmo =='AS_RANK_BASED':
             self.resultados['r'] = self.r
             self.resultados['w'] = self.w
 
     def guardar_result(self):
-        with open('resultados.dat', 'a') as f:
-            keys=sorted(self.resultados.keys())
+        with open('resultados.dat', 'a') as file:
+            keys = sorted(self.resultados.keys())
             for k in keys[:-1]:
-                f.write(k+'='+str(self.resultados[k])+',')
-            f.write(keys[-1] + '=' + str(self.resultados[keys[-1]]) + '\n')
-
-
+                file.write(k+'='+str(self.resultados[k])+',')
+            file.write(keys[-1] + '=' + str(self.resultados[keys[-1]]) + '\n')
 
 if __name__ == '__main__':
-    try :
-        args=get_args()
+    try:
+        args = get_args()
     except:
         init_config()
         print('se ha generado un archivo de configuración de ejemplo')
         exit()
     with open(args['mapa'], 'rb') as f:
         mapa = load(f)
-    max_it=int(args['max_it'])
-    max_it_sc=int(args['max_it_sc'])
-    nh=int(args['nh'])
+    max_it = int(args['max_it'])
+    max_it_sc = int(args['max_it_sc'])
+    nh = int(args['nh'])
+    nhl = int(args['nhl'])
     algoritmo=args['algoritmo']
-    alfa=float(args['alfa'])
-    beta=float(args['beta'])
-    p_evap=float(args['p_evap'])
-    factor_elitismo=float(args['factor_elitismo'])
-    r=int(args['r'])
-    w=int(args['w'])
-    t = tsp_as(mapa, max_it, max_it_sc, nh, algoritmo, alfa, beta, p_evap, factor_elitismo,r,w)
+    alfa = float(args['alfa'])
+    beta = float(args['beta'])
+    p_evap = float(args['p_evap'])
+    factor_elitismo = float(args['factor_elitismo'])
+    r = int(args['r'])
+    w = int(args['w'])
+    t = tsp_as(mapa, max_it, max_it_sc, nh, nhl, algoritmo, alfa, beta, p_evap, factor_elitismo, r, w)
     t.ejecutar()

@@ -19,16 +19,16 @@ class Mapa:
         # calculo de la matriz de distacias
         # TODO solo funciona si no hay agujeros
         self.m_dist = [[0] * nc for i in range(nc)]
-        max_dist=0
+        max_dist = 0
         for i in range(nc):
             for j in range(i + 1, nc):
                 x = self.cords[i]['x'] - self.cords[j]['x']
                 y = self.cords[i]['y'] - self.cords[j]['y']
-                distancia=hypot(x, y)
+                distancia = hypot(x, y)
                 self.m_dist[i][j] = distancia
                 self.m_dist[j][i] = distancia
-                if distancia > max_dist:
-                    max_dist=distancia
+                if distancia > max_dist:#TODO max distancia tal vez deveria tener otro valor(multiplicar por el numero de ciudades?)
+                    max_dist = distancia
         self.m_dist_norm = [[0] * nc for i in range(nc)]
         for i in range(nc):
             for j in range(nc):
@@ -37,7 +37,6 @@ class Mapa:
         self.guardar()
 
     def guardar(self):
-        # todo pasar directory por parametros
         directory = 'mapas/'+str(self.get_num_ciudades())
         makedirs(directory, mode=0o775, exist_ok=True)
         self.id=str(self.get_num_ciudades())+'_'
@@ -52,7 +51,7 @@ class Mapa:
 
     def get_dist_norm(self, a, b):
         return self.m_dist_norm[a][b]
-    # TODO esta funcion es solo para debug, borrar
+
     def pib(self):
         for i in self.cords:
             print(i)

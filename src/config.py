@@ -1,7 +1,9 @@
 #! /usr/bin/env python3.5
 # todo fichero esta hardcodeado
-fichero='config'
 from tsp import ALGORITMOS
+fichero = 'config'
+
+
 def init_config():
     # 0 Ant system
     # 1 Ant system elitista
@@ -15,6 +17,7 @@ max_it=1000
 #maximo numero de iteraciones sin mejorar la solucion
 max_it_sc=25
 nh=50
+nhl=5
 #elegir entre uno de estos algoritmos
 algoritmo="""+algoritmo+"""
 #el peso de las feromonas aumenta con alfa
@@ -32,15 +35,15 @@ w=10""")
 def get_args():
     with open(fichero, 'r') as f:
         lineas = f.readlines()
-        lineas_sin_espacios=[]
+        lineas_sin_espacios = []
         for l in lineas:
             if l[0] != '#':
                 lineas_sin_espacios.append(l.split())
-        pares=[]
+        pares = []
         for l in lineas_sin_espacios:
             for sub_l in l:
                 pares.append(sub_l.split('='))
-        args={}
+        args = {}
         for p in pares:
-            args[p[0]]=p[1]
+            args[p[0]] = p[1]
     return args
