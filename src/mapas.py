@@ -37,7 +37,7 @@ class Mapa:
         self.guardar()
 
     def guardar(self):
-        directory = 'mapas/'+str(self.get_num_ciudades())
+        directory = 'mapas/'
         makedirs(directory, mode=0o775, exist_ok=True)
 
         self.id = self.get_num_ciudades()*100 + len(listdir(directory))

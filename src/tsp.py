@@ -17,6 +17,7 @@ class tsp_as:
         self.beta = beta
         self.p_evap = p_evap
         self.m_feromonas = [[1 for x in range(self.nc)] for i in range(self.nc)]
+        algoritmo = ALGORITMOS[algoritmo]
         if algoritmo == ALGORITMOS[0]:
             self.actualizar_feromonas = self.actualizar_feromonas_as
         elif algoritmo == ALGORITMOS[1]:
@@ -121,7 +122,7 @@ class tsp_as:
         for j in range(self.r_factor):
             ru = rutas[j]
             for i in range(self.nc):
-                self.m_feromonas[ru[i]][ru[(i + 1) % self.nc]] += (self.w_factor - j) / self.w_factor
+                self.m_feromonas[ru[i]][ru[(i + 1) % self.nc]] += (self.w_factor - j) / (self.w_factor*4)
         ru = rutas[0]
         self.mejor_dist = 0
         for i in range(self.nc):
@@ -160,8 +161,8 @@ class tsp_as:
         for r in self.ranking:
             if r not in rutas_distintas:
                 rutas_distintas.append(r)
-        n=len(rutas_distintas)/self.r
-        return n > 0.05
+        n = len(rutas_distintas)/self.r_factor
+        return n <= 0.05
 
     def get_probobabilidades(self, ruta):
         i = ruta[-1]
@@ -207,8 +208,8 @@ class tsp_as:
         if algoritmo == 'AS_ELITISTA':
             self.resultados['factor_elitismo'] = self.fac_elitismo
         elif algoritmo =='AS_RANK_BASED':
-            self.resultados['r'] = self.r
-            self.resultados['w'] = self.w
+            self.resultados['r'] = self.r_factor
+            self.resultados['w'] = self.w_factor
 
     def guardar_result(self):
         with open('resultados.dat', 'a') as file:
@@ -230,7 +231,7 @@ if __name__ == '__main__':
     max_it_sc = int(args['max_it_sc'])
     nh = int(args['nh'])
     nhl = int(args['nhl'])
-    algoritmo=args['algoritmo']
+    algoritmo=int(args['algoritmo'])
     alfa = float(args['alfa'])
     beta = float(args['beta'])
     p_evap = float(args['p_evap'])

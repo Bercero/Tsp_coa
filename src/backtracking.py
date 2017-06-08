@@ -4,7 +4,7 @@ from sys import argv
 from pickle import load
 
 
-class BackTracking:
+class  BackTracking:
     def __init__(self, mapa):
         self.mapa = mapa
         self.mejores_rutas = []

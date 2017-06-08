@@ -1,25 +1,22 @@
 #! /usr/bin/env python3.5
 # todo fichero esta hardcodeado
-from tsp import ALGORITMOS
-fichero = 'config'
 
 
-def init_config():
-    # 0 Ant system
-    # 1 Ant system elitista
-    # 2 Ant system basado en ranking
-    algoritmo=ALGORITMOS[2]
+def init_config(fichero='config'):
     with open(fichero, 'w') as f:
         f.write("""#ejemplo de configuracion
 #requiere que se haya creado antes con el comando mapas.py (el unico parametro es el numero de ciudades)
-mapa=mapas/10/mapa10_0.mp
+mapa=mapas/mapa10_0.mp
 max_it=1000
 #maximo numero de iteraciones sin mejorar la solucion
 max_it_sc=25
 nh=50
 nhl=5
 #elegir entre uno de estos algoritmos
-algoritmo="""+algoritmo+"""
+# 0 Ant system
+# 1 Ant system elitista
+# 2 Ant system basado en ranking
+algoritmo="""+str(0)+"""
 #el peso de las feromonas aumenta con alfa
 #el peso de las distancias mas pequeñas aumenta con beta
 #pueden tomar cualquier valor positivo pero yo uso valores que sumen 1
@@ -31,8 +28,8 @@ factor_elitismo=1
 #solo para el basado en ranking
 #r y w tienen que ser enteros y w mayor que r
 r=10
-w=10""")
-def get_args():
+w=30""")
+def get_args(fichero='config'):
     with open(fichero, 'r') as f:
         lineas = f.readlines()
         lineas_sin_espacios = []
