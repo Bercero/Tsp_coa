@@ -8,7 +8,7 @@ def init_config():
     # 0 Ant system
     # 1 Ant system elitista
     # 2 Ant system basado en ranking
-    algoritmo=ALGORITMOS[0]
+    algoritmo=ALGORITMOS[2]
     with open(fichero, 'w') as f:
         f.write("""#ejemplo de configuracion
 #requiere que se haya creado antes con el comando mapas.py (el unico parametro es el numero de ciudades)

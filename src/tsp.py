@@ -81,6 +81,7 @@ class tsp_as:
                     break
                 else:
                     inaccesibles.append(candidatas.pop(i))
+        # TODO controlar que es una ruta completa y en las hormigas normales tambien
         return ruta
 
     def actualizar_feromonas_as(self, rutas):

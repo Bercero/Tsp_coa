@@ -9,7 +9,7 @@ class Mapa:
         self.escala = 1000  # ancho y largo del mapa en kilometros
         self.agujeros = False  # TODO
         self.simetrico = True  # TODO
-        self.id = 7
+        self.id = 0
         # lista de nc ciudades con cordenadas aleatorias
         self.cords = [{} for i in range(nc)]
         for i in range(nc):
@@ -39,10 +39,9 @@ class Mapa:
     def guardar(self):
         directory = 'mapas/'+str(self.get_num_ciudades())
         makedirs(directory, mode=0o775, exist_ok=True)
-        self.id=str(self.get_num_ciudades())+'_'
-        self.id+=str(len(listdir(directory)))
 
-        name = directory + '/mapa'+self.id+'.mp'
+        self.id = self.get_num_ciudades()*100 + len(listdir(directory))
+        name = directory + '/mapa{0}_{1}.mp'.format(self.get_num_ciudades(), len(listdir(directory)))
         with open(name, 'wb') as f:
             dump(self, f)
 
@@ -68,8 +67,8 @@ class Mapa:
 
     def get_simetrico(self):
         return self.simetrico
+
     def get_id(self):
-        self.id=999#TODO asdinasdnaSNdnaisdnadns
         return self.id
 
 if __name__ == '__main__':
