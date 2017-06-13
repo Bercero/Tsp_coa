@@ -7,8 +7,6 @@ from os import makedirs, listdir
 class Mapa:
     def __init__(self, nc):
         self.escala = 1000  # ancho y largo del mapa en kilometros
-        self.agujeros = False  # TODO
-        self.simetrico = True  # TODO
         self.id = 0
         # lista de nc ciudades con cordenadas aleatorias
         self.cords = [{} for i in range(nc)]
@@ -17,7 +15,6 @@ class Mapa:
             self.cords[i]['y'] = int(random() * self.escala)
 
         # calculo de la matriz de distacias
-        # TODO solo funciona si no hay agujeros
         self.m_dist = [[0] * nc for i in range(nc)]
         max_dist = 0
         for i in range(nc):
@@ -37,7 +34,7 @@ class Mapa:
         self.guardar()
 
     def guardar(self):
-        directory = 'mapas/'
+        directory = 'mapas/{0}/'.format(self.get_num_ciudades())
         makedirs(directory, mode=0o775, exist_ok=True)
 
         self.id = self.get_num_ciudades()*100 + len(listdir(directory))
@@ -62,28 +59,11 @@ class Mapa:
     def get_num_ciudades(self):
         return len(self.cords)
 
-    def get_agujeros(self):
-        return self.agujeros
-
-    def get_simetrico(self):
-        return self.simetrico
-
     def get_id(self):
         return self.id
 
 if __name__ == '__main__':
     from sys import argv
 
-    #try:
-    # el primer argumento es el numero de ciudades
     nc = int(argv[1])
     m = Mapa(nc)
-#     todo print mapa generado chachimente
-
-#except:
-    # TODO mejorar esta linea y devolver error
-    # print('''USO:
-    # ''' + argv[0] + ''' num_ciudades agujeros simetrico fichero
-    # ejemplo ''' + argv[0] + ''' 5 1 1
-    # crea un mapa de 5 ciudades no todas ellas directamente conectadas y con caminos simetricos''')
-

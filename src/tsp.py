@@ -32,6 +32,7 @@ class tsp_as:
             self.covergencia = self.convergencia_ranking
         self.mejor_ruta=None
         self.init_result(algoritmo)
+
         self.mejor_dist = 0
 
         self.g = None
@@ -162,7 +163,7 @@ class tsp_as:
             if r not in rutas_distintas:
                 rutas_distintas.append(r)
         n = len(rutas_distintas)/self.r_factor
-        return n <= 0.05
+        return n <= 0.50
 
     def get_probobabilidades(self, ruta):
         i = ruta[-1]
@@ -195,9 +196,6 @@ class tsp_as:
 
     def init_result(self, algoritmo):
         self.resultados={'id':self.mapa.get_id()}
-
-        self.resultados['agujeros'] = self.mapa.get_agujeros()
-        self.resultados['simetrico'] = self.mapa.get_simetrico()
 
         self.resultados['nc'] = self.nc
         self.resultados['nh'] = self.nh

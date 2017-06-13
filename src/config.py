@@ -6,7 +6,7 @@ def init_config(fichero='config'):
     with open(fichero, 'w') as f:
         f.write("""#ejemplo de configuracion
 #requiere que se haya creado antes con el comando mapas.py (el unico parametro es el numero de ciudades)
-mapa=mapas/mapa10_0.mp
+mapa=mapas/10/mapa10_0.mp
 max_it=1000
 #maximo numero de iteraciones sin mejorar la solucion
 max_it_sc=25
